@@ -22,7 +22,7 @@ do
     /usr/local/bin/waitforit -host ${i%:*} -port ${i#*:} -retry $MILLIS_BETWEEN_WAIT_RETRIES -timeout $SECONDS_TO_WAIT -debug
 
     echo "Waiting for ElasticSearch ${ELASTICSEARCH_WAIT_FOR_STATUS} status"
-    wget -q "http://${i%:*}:${i#*:}/_cluster/health?wait_for_status=${ELASTICSEARCH_WAIT_FOR_STATUS}&timeout=${SECONDS_TO_WAIT}s" -O /dev/null || echo "[ERROR] Request timed out"
+    wget -q "http://${i%:*}:${i#*:}/_cluster/health?wait_for_status=${ELASTICSEARCH_WAIT_FOR_STATUS}&timeout=${SECONDS_TO_WAIT}s" -O /dev/null || { echo "[ERROR] Could not wait for elasticsearch" ; exit 1; }
 done
 
 exec nginx -g 'daemon off;'
